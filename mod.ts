@@ -19,3 +19,9 @@ export function Lw(loaderName: string) {
 }
 
 export type Lw<T> = Promise<T> | T
+
+export type LwInterface<T> = {
+    [K in keyof T]-?: undefined extends T[K] 
+        ? Lw<NonNullable<T[K]>>
+        : NonNullable<T[K]>
+}
