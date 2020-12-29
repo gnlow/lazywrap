@@ -6,6 +6,7 @@ class User {
         console.log("id", await this.id)
     }
     async load() {
+        await new Promise(r => setTimeout(r, 1000))
         this.id = Math.random()
     }
 }
