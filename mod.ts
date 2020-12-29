@@ -1,14 +1,15 @@
-function lw(loader: (...args: any) => Promise<any>) {
+export function Lw(loaderName: string) {
     return (target: {} | any, name: PropertyKey): any => {
+        const propertyName = `__lw__${String(name)}`
         const descriptor = {
             async get(this: any) {
-                const propertyName = `__lw__${String(name)}`
-
                 if (!this[propertyName]) {
-                    this[propertyName] = await loader()
+                    await this[loaderName]()
                 }
-
                 return this[propertyName]
+            },
+            set(this: any, value: any) {
+                this[propertyName] = value
             },
             enumerable: true,
             configurable: true,
@@ -17,17 +18,4 @@ function lw(loader: (...args: any) => Promise<any>) {
     }
 }
 
-type Lw<T> = Promise<T>
-
-class User {
-    @lw(User.prototype.load) id?: Lw<number>
-    async log() {
-        console.log("id", await this.id)
-    }
-    async load() {
-        return Math.random()
-    }
-}
-
-const user1 = new User
-await user1.log()
+export type Lw<T> = Promise<T> | T
