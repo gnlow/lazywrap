@@ -1,11 +1,11 @@
-function rand() {
+function lw(loader: (...args: any) => Promise<any>) {
     return (target: {} | any, name: PropertyKey): any => {
         const descriptor = {
-            get(this: any) {
-                const propertyName = `__${String(name)}`
+            async get(this: any) {
+                const propertyName = `__lw__${String(name)}`
 
                 if (!this[propertyName]) {
-                    this[propertyName] = Math.random()
+                    this[propertyName] = await loader()
                 }
 
                 return this[propertyName]
@@ -17,12 +17,17 @@ function rand() {
     }
 }
 
+type Lw<T> = Promise<T>
+
 class User {
-    @rand() id?: number
-    log() {
-        console.log("id", this.id)
+    @lw(User.prototype.load) id?: Lw<number>
+    async log() {
+        console.log("id", await this.id)
+    }
+    async load() {
+        return Math.random()
     }
 }
 
 const user1 = new User
-user1.log()
+await user1.log()
