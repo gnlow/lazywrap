@@ -5,7 +5,7 @@ Lazy-load async properties
 import {Lw, LwInterface} from "https://denopkg.com/gnlow/lazywrap@main/mod.ts"
 
 class User {
-    @Lw("load") id!: Lw<number>
+    @Lw("load") declare id: Lw<number>
     async log() {
         console.log("id", await this.id)
     }

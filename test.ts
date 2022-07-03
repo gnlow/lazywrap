@@ -1,7 +1,7 @@
 import {Lw, LwInterface} from "./mod.ts"
 
 class User {
-    @Lw("load") id!: Lw<number>
+    @Lw("load") declare id: Lw<number>
     async log() {
         console.log("id", await this.id)
     }
